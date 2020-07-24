@@ -1,8 +1,8 @@
-from services import dbService
+from services import dbService, amostraService
 import datetime
+from models.amostra import Amostra
 
-def runApp():
-    dbObjects = dbService.connect()
+def insertAmostra():
     id_amostra = input('Digite um numero identificador da Amostra:\n')
     data = input('Digite a data que a Amostra foi coletada: dd/mm/yy\n') 
     id_amostrador = input('Digite o id do amostrador\n')
@@ -10,20 +10,19 @@ def runApp():
     id_campanha = input('Digite o id da campanha\n')
     id_equipamento = input('Digite o id do equipamento\n')
     id_projeto = input('Digite o id do projeto\n')
+    novaAmostra = Amostra(id_amostra, data, id_amostrador, id_ponto, id_campanha, id_equipamento, id_projeto)
     print('''Dados digitados da Amostra:\n
              Data: {}\n
              Amostrador: {}\n
              Campanha: {}\n
              Equipamento: {}\n
-             Projeto: {}\n'''.format(data, id_amostrador, id_campanha, id_equipamento, id_projeto))
+             Projeto: {}\n'''.format(novaAmostra.data, novaAmostra.idAmostrador, novaAmostra.idCampanha, novaAmostra.idEquipamento, novaAmostra.idProjeto))
+    
+    amostraService.insert(novaAmostra)
 
-    try:
-        dbObjects[1].execute("INSERT INTO `projeto_pibic`.`Amostra` (`id_amostra`, `data`, `id_amostrador`, `id_ponto`, `id_campanha`, `id_equipamento`, `id_projeto`) VALUES ({}, {}, {}, {}, {}, {}, {});".format(id_amostra, data, id_amostrador, id_ponto, id_campanha, id_equipamento, id_projeto))
-        print('Amostra inserida com sucesso!')
 
-    except dbObjects[2] as e:
-        print(e)
-
+def runApp():
+    insertAmostra()
 
 if __name__ == '__main__':
     runApp()
